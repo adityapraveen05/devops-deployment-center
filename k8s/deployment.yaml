@@ -1,0 +1,35 @@
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: devops-deployment-center
+  labels:
+    app: devops-deployment-center
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: devops-deployment-center
+  template:
+    metadata:
+      labels:
+        app: devops-deployment-center
+    spec:
+      containers:
+        - name: devops-dashboard
+          image: devops-deployment-center:latest
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 5000
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 5000
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 5000
+            initialDelaySeconds: 15
+            periodSeconds: 20
