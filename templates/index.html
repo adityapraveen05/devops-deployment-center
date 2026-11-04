@@ -1,0 +1,353 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DevOps Deployment Center</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body>
+<div class="app-shell">
+
+    <aside class="sidebar" id="sidebar">
+        <div class="brand">
+            <div class="brand-icon"><i data-lucide="boxes"></i></div>
+            <div>
+                <h2>Deploy<span>Center</span></h2>
+                <small>DEVOPS PLATFORM</small>
+            </div>
+        </div>
+
+        <div class="nav-label">WORKSPACE</div>
+        <nav class="navigation">
+            <button class="nav-item active" data-page="overview">
+                <i data-lucide="layout-dashboard"></i> Overview
+            </button>
+            <button class="nav-item" data-page="deployments">
+                <i data-lucide="rocket"></i> Deployments
+            </button>
+            <button class="nav-item" data-page="infrastructure">
+                <i data-lucide="server"></i> Infrastructure
+            </button>
+            <button class="nav-item" data-page="pipeline">
+                <i data-lucide="workflow"></i> CI/CD Pipeline
+            </button>
+        </nav>
+
+        <div class="nav-label">SYSTEM</div>
+        <nav class="navigation">
+            <button class="nav-item" data-page="activity">
+                <i data-lucide="history"></i> Activity Logs
+            </button>
+        </nav>
+
+        <div class="sidebar-bottom">
+            <div class="connection-card">
+                <div class="connection-heading">
+                    <span class="connection-dot" id="connectionDot"></span>
+                    <strong>System Connection</strong>
+                </div>
+                <p id="connectionText">Connecting to backend...</p>
+                <small>Infrastructure monitoring</small>
+            </div>
+            <div class="profile">
+                <div class="avatar">AD</div>
+                <div>
+                    <strong>Administrator</strong>
+                    <small>DevOps Engineer</small>
+                </div>
+                <i data-lucide="chevron-down"></i>
+            </div>
+        </div>
+    </aside>
+
+    <main class="main-content">
+        <header class="topbar">
+            <div class="topbar-left">
+                <button class="icon-button menu-toggle" id="menuToggle">
+                    <i data-lucide="menu"></i>
+                </button>
+                <div>
+                    <div class="breadcrumb">Workspace / <span id="breadcrumb">Overview</span></div>
+                    <h1 id="pageTitle">Deployment Overview</h1>
+                </div>
+            </div>
+            <div class="topbar-right">
+                <div class="environment-label">
+                    <span class="green-dot"></span>
+                    LOCAL ENVIRONMENT
+                </div>
+                <button class="icon-button" id="refreshButton" title="Refresh data">
+                    <i data-lucide="refresh-cw"></i>
+                </button>
+                <div class="avatar">AD</div>
+            </div>
+        </header>
+
+        <div class="page-content">
+
+            <!-- OVERVIEW -->
+            <section class="page active" id="page-overview">
+                <div class="welcome-row">
+                    <div>
+                        <h2>Welcome to your deployment center</h2>
+                        <p>Monitor your application, infrastructure and release pipeline.</p>
+                    </div>
+                    <div class="last-updated">
+                        <i data-lucide="clock"></i>
+                        <span id="lastUpdated">Waiting for data</span>
+                    </div>
+                </div>
+
+                <div class="metric-grid">
+                    <article class="metric-card">
+                        <div class="metric-top">
+                            <span>Application Status</span>
+                            <div class="metric-icon purple"><i data-lucide="activity"></i></div>
+                        </div>
+                        <h2 id="appStatus">Checking...</h2>
+                        <div class="metric-foot"><span class="status-dot" id="appStatusDot"></span> Backend health</div>
+                    </article>
+
+                    <article class="metric-card">
+                        <div class="metric-top">
+                            <span>Docker Containers</span>
+                            <div class="metric-icon blue"><i data-lucide="container"></i></div>
+                        </div>
+                        <h2 id="containerCount">--</h2>
+                        <div class="metric-foot">Running containers</div>
+                    </article>
+
+                    <article class="metric-card">
+                        <div class="metric-top">
+                            <span>Kubernetes Pods</span>
+                            <div class="metric-icon green"><i data-lucide="boxes"></i></div>
+                        </div>
+                        <h2 id="podCount">--</h2>
+                        <div class="metric-foot">Ready pods</div>
+                    </article>
+
+                    <article class="metric-card">
+                        <div class="metric-top">
+                            <span>Deployments</span>
+                            <div class="metric-icon orange"><i data-lucide="rocket"></i></div>
+                        </div>
+                        <h2 id="deploymentCount">--</h2>
+                        <div class="metric-foot">Kubernetes deployments</div>
+                    </article>
+                </div>
+
+                <div class="content-grid">
+                    <section class="panel">
+                        <div class="panel-heading">
+                            <div>
+                                <h3>Infrastructure Health</h3>
+                                <p>Live connection checks</p>
+                            </div>
+                            <span class="live-label"><span></span> LIVE</span>
+                        </div>
+                        <div class="health-list">
+                            <div class="health-item">
+                                <div class="health-info">
+                                    <div class="health-icon"><i data-lucide="git-branch"></i></div>
+                                    <div><strong>Jenkins</strong><small>CI/CD automation</small></div>
+                                </div>
+                                <span class="status-badge unknown" id="jenkinsStatus">Checking</span>
+                            </div>
+                            <div class="health-item">
+                                <div class="health-info">
+                                    <div class="health-icon"><i data-lucide="container"></i></div>
+                                    <div><strong>Docker</strong><small>Container engine</small></div>
+                                </div>
+                                <span class="status-badge unknown" id="dockerStatus">Checking</span>
+                            </div>
+                            <div class="health-item">
+                                <div class="health-info">
+                                    <div class="health-icon"><i data-lucide="ship"></i></div>
+                                    <div><strong>Kubernetes</strong><small>Container orchestration</small></div>
+                                </div>
+                                <span class="status-badge unknown" id="kubernetesStatus">Checking</span>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section class="panel">
+                        <div class="panel-heading">
+                            <div>
+                                <h3>Application Information</h3>
+                                <p>Current runtime details</p>
+                            </div>
+                            <i data-lucide="info" class="muted-icon"></i>
+                        </div>
+                        <div class="info-list">
+                            <div><span>Application</span><strong>DevOps Deployment Center</strong></div>
+                            <div><span>Version</span><strong id="appVersion">--</strong></div>
+                            <div><span>Environment</span><strong id="appEnvironment">--</strong></div>
+                            <div><span>Instance</span><strong id="appHost">--</strong></div>
+                            <div><span>Platform</span><strong>Docker / Kubernetes</strong></div>
+                        </div>
+                    </section>
+                </div>
+
+                <section class="panel table-panel">
+                    <div class="panel-heading">
+                        <div>
+                            <h3>Recent Deployments</h3>
+                            <p>Latest recorded application releases</p>
+                        </div>
+                        <button class="text-button" data-navigate="deployments">View all <i data-lucide="arrow-right"></i></button>
+                    </div>
+                    <div class="table-wrap">
+                        <table>
+                            <thead>
+                                <tr><th>Deployment</th><th>Version</th><th>Environment</th><th>Status</th><th>Time</th></tr>
+                            </thead>
+                            <tbody id="recentDeployments">
+                                <tr><td colspan="5" class="empty-state">Waiting for deployment data...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+            </section>
+
+            <!-- DEPLOYMENTS -->
+            <section class="page" id="page-deployments">
+                <div class="section-intro">
+                    <h2>Deployment Management</h2>
+                    <p>Review application releases and Kubernetes rollout information.</p>
+                </div>
+                <div class="metric-grid two-cards">
+                    <article class="metric-card">
+                        <div class="metric-top"><span>Total Deployments</span><div class="metric-icon blue"><i data-lucide="layers"></i></div></div>
+                        <h2 id="allDeploymentCount">--</h2>
+                        <div class="metric-foot">Kubernetes deployment resources</div>
+                    </article>
+                    <article class="metric-card">
+                        <div class="metric-top"><span>Available Replicas</span><div class="metric-icon green"><i data-lucide="check-circle"></i></div></div>
+                        <h2 id="replicaCount">--</h2>
+                        <div class="metric-foot">Currently available replicas</div>
+                    </article>
+                </div>
+                <section class="panel table-panel">
+                    <div class="panel-heading"><div><h3>Kubernetes Deployments</h3><p>Resources discovered in the cluster</p></div></div>
+                    <div class="table-wrap">
+                        <table>
+                            <thead><tr><th>Name</th><th>Namespace</th><th>Ready</th><th>Available</th><th>Image</th></tr></thead>
+                            <tbody id="deploymentTable"><tr><td colspan="5" class="empty-state">Waiting for data...</td></tr></tbody>
+                        </table>
+                    </div>
+                </section>
+                <section class="panel table-panel">
+                    <div class="panel-heading"><div><h3>Release History</h3><p>Recorded deployment events</p></div></div>
+                    <div class="table-wrap">
+                        <table>
+                            <thead><tr><th>Release</th><th>Version</th><th>Environment</th><th>Status</th><th>Timestamp</th></tr></thead>
+                            <tbody id="deploymentHistory"><tr><td colspan="5" class="empty-state">No deployment history available yet.</td></tr></tbody>
+                        </table>
+                    </div>
+                </section>
+            </section>
+
+            <!-- INFRASTRUCTURE -->
+            <section class="page" id="page-infrastructure">
+                <div class="section-intro">
+                    <h2>Infrastructure Monitoring</h2>
+                    <p>Inspect your Docker containers, Kubernetes nodes and Pods.</p>
+                </div>
+                <section class="panel table-panel">
+                    <div class="panel-heading"><div><h3>Docker Containers</h3><p>Containers visible to the monitoring backend</p></div></div>
+                    <div class="table-wrap">
+                        <table>
+                            <thead><tr><th>Name</th><th>Image</th><th>Status</th><th>Ports</th></tr></thead>
+                            <tbody id="containerTable"><tr><td colspan="4" class="empty-state">Waiting for Docker connection...</td></tr></tbody>
+                        </table>
+                    </div>
+                </section>
+                <section class="panel table-panel">
+                    <div class="panel-heading"><div><h3>Kubernetes Pods</h3><p>Pod health and namespace information</p></div></div>
+                    <div class="table-wrap">
+                        <table>
+                            <thead><tr><th>Name</th><th>Namespace</th><th>Ready</th><th>Status</th><th>Restarts</th></tr></thead>
+                            <tbody id="podTable"><tr><td colspan="5" class="empty-state">Waiting for Kubernetes connection...</td></tr></tbody>
+                        </table>
+                    </div>
+                </section>
+                <section class="panel table-panel">
+                    <div class="panel-heading"><div><h3>Kubernetes Nodes</h3><p>Cluster node availability</p></div></div>
+                    <div class="table-wrap">
+                        <table>
+                            <thead><tr><th>Node</th><th>Status</th><th>Roles</th><th>Version</th></tr></thead>
+                            <tbody id="nodeTable"><tr><td colspan="4" class="empty-state">Waiting for Kubernetes connection...</td></tr></tbody>
+                        </table>
+                    </div>
+                </section>
+            </section>
+
+            <!-- PIPELINE -->
+            <section class="page" id="page-pipeline">
+                <div class="section-intro">
+                    <h2>CI/CD Pipeline</h2>
+                    <p>Monitor the automated build, test and deployment workflow.</p>
+                </div>
+                <section class="panel">
+                    <div class="panel-heading"><div><h3>Pipeline Workflow</h3><p>Jenkins automation stages</p></div><span class="status-badge unknown" id="pipelineStatus">Not connected</span></div>
+                    <div class="pipeline-flow">
+                        <div class="pipeline-stage"><div class="stage-icon"><i data-lucide="git-branch"></i></div><strong>Checkout</strong><small>Source code</small></div>
+                        <div class="pipeline-arrow">→</div>
+                        <div class="pipeline-stage"><div class="stage-icon"><i data-lucide="test-tube"></i></div><strong>Test</strong><small>Validation</small></div>
+                        <div class="pipeline-arrow">→</div>
+                        <div class="pipeline-stage"><div class="stage-icon"><i data-lucide="container"></i></div><strong>Build</strong><small>Docker image</small></div>
+                        <div class="pipeline-arrow">→</div>
+                        <div class="pipeline-stage"><div class="stage-icon"><i data-lucide="ship"></i></div><strong>Deploy</strong><small>Kubernetes</small></div>
+                    </div>
+                    <div class="notice"><i data-lucide="info"></i><span>Pipeline stages shown here represent the intended workflow. Actual build results will be connected to Jenkins in the next implementation stage.</span></div>
+                </section>
+                <section class="panel">
+                    <div class="panel-heading"><div><h3>Pipeline Configuration</h3><p>Project automation details</p></div></div>
+                    <div class="info-list">
+                        <div><span>Automation server</span><strong>Jenkins</strong></div>
+                        <div><span>Source control</span><strong>Git / GitHub</strong></div>
+                        <div><span>Container platform</span><strong>Docker</strong></div>
+                        <div><span>Orchestration</span><strong>Kubernetes</strong></div>
+                        <div><span>Pipeline definition</span><strong>Jenkinsfile</strong></div>
+                    </div>
+                </section>
+            </section>
+
+            <!-- ACTIVITY -->
+            <section class="page" id="page-activity">
+                <div class="section-intro">
+                    <h2>Activity Logs</h2>
+                    <p>Application events and infrastructure observations.</p>
+                </div>
+                <section class="panel table-panel">
+                    <div class="panel-heading"><div><h3>System Activity</h3><p>Events recorded by the application</p></div></div>
+                    <div class="table-wrap">
+                        <table>
+                            <thead><tr><th>Time</th><th>Event</th><th>Component</th><th>Details</th></tr></thead>
+                            <tbody id="activityTable"><tr><td colspan="4" class="empty-state">No events recorded yet.</td></tr></tbody>
+                        </table>
+                    </div>
+                </section>
+            </section>
+
+            <footer class="footer">
+                <span>DevOps Deployment Center</span>
+                <span>Academic Project · Practical 7</span>
+            </footer>
+        </div>
+    </main>
+</div>
+
+<div class="toast" id="toast"></div>
+<script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
+<script>
+    if (window.lucide) lucide.createIcons();
+</script>
+</body>
+</html>
